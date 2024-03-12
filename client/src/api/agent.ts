@@ -5,6 +5,7 @@ import { router } from "../app/router/Routes";
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
 axios.defaults.baseURL = 'http://localhost:5000/api/';
+axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -54,8 +55,15 @@ const Catalog = {
   details: (id: number) => requests.get(`services/${id}`)
 }
 
+const Basket = {
+  get: () => requests.get('basket'),
+  addItem: (serviceId: number) => requests.post(`basket?serviceId=${serviceId}`, {}),
+  removeItem: (serviceId: number) => requests.delete(`basket?serviceId=${serviceId}`)
+}
+
 const agent = {
-  Catalog
+  Catalog,
+  Basket
 }
 
 export default agent;

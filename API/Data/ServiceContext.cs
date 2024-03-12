@@ -10,5 +10,6 @@ namespace API.Data
         }
 
         public DbSet<Service> Services { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
     }
 }

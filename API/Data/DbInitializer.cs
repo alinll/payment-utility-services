@@ -12,27 +12,32 @@ namespace API.Data
                 new Service 
                 {
                     Name = "Електроенергія",
-                    PictureUrl = "/images/services/electricity.png"
+                    PictureUrl = "/images/services/electricity.png",
+                    Price = 2.64m
                 },
                 new Service
                 {
                     Name = "Вода",
-                    PictureUrl = "/images/services/water.png"
+                    PictureUrl = "/images/services/water.png",
+                    Price = 12.948m
                 },
                 new Service
                 {
                     Name = "Газ",
-                    PictureUrl = "/images/services/gas.png"
+                    PictureUrl = "/images/services/gas.png",
+                    Price = 7.98m
                 },
                 new Service
                 {
                     Name = "Доставка газу",
-                    PictureUrl = "/images/services/gas.png"
+                    PictureUrl = "/images/services/gas.png",
+                    Price = 1.68m
                 },
                 new Service
                 {
                     Name = "Опалення",
-                    PictureUrl = "/images/services/heating.png"
+                    PictureUrl = "/images/services/heating.png",
+                    Price = 1684.32m
                 }
             );
 

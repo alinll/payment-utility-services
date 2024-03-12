@@ -1,12 +1,24 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { Service } from "../../models/service";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import agent from "../../api/agent";
+import { LoadingButton } from "@mui/lab";
 
 interface Props {
   service: Service;
 }
 
 export default function ServiceCard({service}: Props) {
+  const [loading, setLoading] = useState(false);
+
+  function handleAddItem(serviceId: number) {
+    setLoading(true);
+    agent.Basket.addItem(serviceId)
+    .catch(error => console.log(error))
+    .finally(() => setLoading(false));
+  }
+
   return(
     <Card sx={{ display: 'flex' }}>
       <CardMedia
@@ -22,8 +34,8 @@ export default function ServiceCard({service}: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button component={Link} to={`/catalog/${service.id}`} size="small">View</Button>
-        <Button size="small">Pay</Button>
+        <Button component={Link} to={`/catalog/${service.id}`} size="small">Переглянути</Button>
+        <LoadingButton loading={loading} onClick={() => handleAddItem(service.id)} size="small">Оплатити</LoadingButton>
       </CardActions>
       </Box>
     </Card>
