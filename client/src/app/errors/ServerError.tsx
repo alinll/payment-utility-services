@@ -13,11 +13,11 @@ export default function ServerError() {
         </Typography>
         <Divider />
         <Typography variant='body1'>
-          {state.error.detail || 'Internal server error'}
+          {state.error.detail || 'Внутрішня помилка сервера'}
         </Typography>
         </>
       ) : (
-        <Typography gutterBottom variant='h5'>Server Error</Typography>
+        <Typography gutterBottom variant='h5'>Помилка сервера</Typography>
       )}
     </Container>
   )

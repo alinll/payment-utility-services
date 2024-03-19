@@ -2,8 +2,9 @@ import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } fr
 import { Service } from "../../models/service";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import agent from "../../api/agent";
+import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
+import { useStoreContext } from "../../store/StoreContext";
 
 interface Props {
   service: Service;
@@ -11,10 +12,12 @@ interface Props {
 
 export default function ServiceCard({service}: Props) {
   const [loading, setLoading] = useState(false);
+  const { setBasket } = useStoreContext();
 
   function handleAddItem(serviceId: number) {
     setLoading(true);
     agent.Basket.addItem(serviceId)
+    .then(basket => setBasket(basket))
     .catch(error => console.log(error))
     .finally(() => setLoading(false));
   }

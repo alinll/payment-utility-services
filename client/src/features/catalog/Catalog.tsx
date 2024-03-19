@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Service } from "../../models/service"
 import ServiceList from "./ServiceList";
-import agent from "../../api/agent";
+import agent from "../../app/api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 
 export default function Catalog() {
@@ -15,7 +15,7 @@ export default function Catalog() {
     .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <LoadingComponent message="Loading services..." />
+  if (loading) return <LoadingComponent message="Завантаження сервісів..." />
   
   return(
     <>
