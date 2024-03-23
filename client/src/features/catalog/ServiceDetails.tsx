@@ -1,40 +1,33 @@
 import { Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Service } from "../../models/service";
-import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { useStoreContext } from "../../store/StoreContext";
 import { LoadingButton } from "@mui/lab";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { addBasketItemAsync } from "../basket/basketSlice";
+import { fetchServiceAsync, servicesSelectors } from "./catalogSlice";
 
 export default function ServiceDetails() {
-  const { basket, setBasket } = useStoreContext();
+  const { basket, status } = useAppSelector(state => state.basket);
+  const dispatch = useAppDispatch();
   const { id } = useParams<{id: string}>();
-  const [service, setService] = useState<Service | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
+  const service = useAppSelector(state => servicesSelectors.selectById(state, parseInt(id!)));
+  const { status: serviceStatus } = useAppSelector(state => state.catalog);
   const item = basket?.items.find(i => i.serviceId === service?.id);
 
   useEffect(() => {
-    id && agent.Catalog.details(parseInt(id))
-    .then(response => setService(response))
-    .catch(error => console.log(error))
-    .finally(() => setLoading(false));
-  }, [id])
+    if (!service && id) dispatch(fetchServiceAsync(parseInt(id)));
+  }, [id, item, dispatch, service])
 
   function addToCart() {
     if (!service) return;
-    setSubmitting(true);
     if (!item) {
-      agent.Basket.addItem(service.id)
-      .then(basket => setBasket(basket))
-      .catch(error => console.log(error))
-      .finally(() => setSubmitting(false))
+      dispatch(addBasketItemAsync({serviceId: service?.id}));
     }
   }
 
-  if (loading) return <LoadingComponent message="Завантаження сервісу..." />
+  if (serviceStatus.includes('pending')) return <LoadingComponent message="Завантаження сервісу..." />
 
   if (!service) return <NotFound />
 
@@ -47,7 +40,7 @@ export default function ServiceDetails() {
       <Grid item xs={4} sx={{mt: 2}}>
           <LoadingButton 
           disabled={!!item}
-          loading={submitting} 
+          loading={status.includes('pending')} 
           onClick={addToCart} 
           sx={{height: '55px'}} 
           color='primary' 

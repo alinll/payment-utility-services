@@ -1,26 +1,14 @@
 import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import { useStoreContext } from "../../store/StoreContext";
-import { useState } from "react";
-import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
 import BasketSummary from "./BasketSummary";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { removeBasketItemAsync } from "./basketSlice";
 
 export default function BasketPage() {
-  const { basket, removeItem} = useStoreContext();
-  const [status, setStatus] = useState({
-    loading: false,
-    name: ''
-  });
-
-  function handleRemoveItem(serviceId: number, name: string) {
-    setStatus({loading: true, name});
-    agent.Basket.removeItem(serviceId)
-    .then(() => removeItem(serviceId))
-    .catch(error => console.log(error))
-    .finally(() => setStatus({loading: false, name}));
-  }
+  const { basket, status } = useAppSelector(state => state.basket);
+  const dispatch = useAppDispatch();
 
   if (!basket) return <Typography variant='h3'>Ваш кошик порожній</Typography>
 
@@ -30,8 +18,8 @@ export default function BasketPage() {
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
-            <TableCell>Service</TableCell>
-            <TableCell align="right">Price</TableCell>
+            <TableCell>Сервіс</TableCell>
+            <TableCell align="right">Ціна</TableCell>
             <TableCell align="right"></TableCell>
           </TableRow>
         </TableHead>
@@ -50,8 +38,8 @@ export default function BasketPage() {
               <TableCell align="right">{item.price}</TableCell>
               <TableCell align="right">
                 <LoadingButton 
-                loading={status.loading && status.name === 'del' + item.serviceId} 
-                onClick={() => handleRemoveItem(item.serviceId, 'del' + item.serviceId)} 
+                loading={status === 'pendingRemoveItem' + item.serviceId + 'del'} 
+                onClick={() => dispatch(removeBasketItemAsync({serviceId: item.serviceId, name: 'del'}))} 
                 color='error'>
                   <Delete />
                 </LoadingButton>

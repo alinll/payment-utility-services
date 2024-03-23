@@ -1,26 +1,17 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { Service } from "../../models/service";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
-import { useStoreContext } from "../../store/StoreContext";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { addBasketItemAsync } from "../basket/basketSlice";
 
 interface Props {
   service: Service;
 }
 
 export default function ServiceCard({service}: Props) {
-  const [loading, setLoading] = useState(false);
-  const { setBasket } = useStoreContext();
-
-  function handleAddItem(serviceId: number) {
-    setLoading(true);
-    agent.Basket.addItem(serviceId)
-    .then(basket => setBasket(basket))
-    .catch(error => console.log(error))
-    .finally(() => setLoading(false));
-  }
+  const { status } = useAppSelector(state => state.basket);
+  const dispatch = useAppDispatch();
 
   return(
     <Card sx={{ display: 'flex' }}>
@@ -38,7 +29,7 @@ export default function ServiceCard({service}: Props) {
       </CardContent>
       <CardActions>
         <Button component={Link} to={`/catalog/${service.id}`} size="small">Переглянути</Button>
-        <LoadingButton loading={loading} onClick={() => handleAddItem(service.id)} size="small">Оплатити</LoadingButton>
+        <LoadingButton loading={status.includes('pendingAddItem' + service.id)} onClick={() => dispatch(addBasketItemAsync({serviceId: service.id}))} size="small">Оплатити</LoadingButton>
       </CardActions>
       </Box>
     </Card>

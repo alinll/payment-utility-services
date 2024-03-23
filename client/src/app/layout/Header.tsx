@@ -1,7 +1,7 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, Badge, Box, IconButton, List, ListItem, Toolbar, Typography } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
-import { useStoreContext } from "../../store/StoreContext";
+import { useAppSelector } from "../store/configureStore";
 
 const links = [
   { title : 'Увійти в акаунт', path: '/login' },
@@ -18,7 +18,7 @@ const navStyles = {
 }
 
 export default function Header() {
-  const { basket } = useStoreContext();
+  const { basket } = useAppSelector(state => state.basket);
 
   return(
     <AppBar position='static' sx={{mb: 4}}>

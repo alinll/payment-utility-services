@@ -32,7 +32,7 @@ namespace API.Controllers
 
             var service = await _context.Services.FindAsync(serviceId);
 
-            if (service == null) return NotFound();
+            if (service == null) return BadRequest(new ProblemDetails{ Title = "Service Not Found" });
 
             basket.AddItem(service);
 

@@ -3,14 +3,15 @@ import Header from './Header';
 import { Container, CssBaseline } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/ReactToastify.css';
-import { useStoreContext } from '../../store/StoreContext';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../util/util';
 import agent from '../api/agent';
 import LoadingComponent from './LoadingComponent';
+import { useAppDispatch } from '../store/configureStore';
+import { setBasket } from '../../features/basket/basketSlice';
 
 function App() {
-  const { setBasket } = useStoreContext();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -18,13 +19,13 @@ function App() {
 
     if (userId) {
       agent.Basket.get()
-      .then(basket => setBasket(basket))
+      .then(basket => dispatch(setBasket(basket)))
       .catch(error => console.log(error))
       .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
-  }, [setBasket])
+  }, [dispatch])
 
   if (loading) return <LoadingComponent message='Запуск програми...' />
 

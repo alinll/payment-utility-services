@@ -1,21 +1,19 @@
-import { useState, useEffect } from "react";
-import { Service } from "../../models/service"
+import { useEffect } from "react";
 import ServiceList from "./ServiceList";
-import agent from "../../app/api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { fetchServicesAsync, servicesSelectors } from "./catalogSlice";
 
 export default function Catalog() {
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
+  const services = useAppSelector(servicesSelectors.selectAll);
+  const { servicesLoaded, status } = useAppSelector(state => state.catalog);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    agent.Catalog.list()
-    .then(services => setServices(services))
-    .catch(error => console.log(error))
-    .finally(() => setLoading(false))
-  }, [])
+    if (!servicesLoaded) dispatch(fetchServicesAsync());
+  }, [servicesLoaded, dispatch])
 
-  if (loading) return <LoadingComponent message="Завантаження сервісів..." />
+  if (status.includes('pending')) return <LoadingComponent message="Завантаження сервісів..." />
   
   return(
     <>
