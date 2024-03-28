@@ -88,7 +88,7 @@ namespace API.Controllers
                     ServiceId = item.ServiceId,
                     Name = item.Service.Name,
                     PictureUrl = item.Service.PictureUrl,
-                    Price = item.Service.Price
+                    Price = new List<decimal>(item.Service.Price)
                 }).ToList()
             };
         }

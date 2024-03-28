@@ -31,36 +31,63 @@ namespace API.Data
                 {
                     Name = "Електроенергія",
                     PictureUrl = "/images/services/electricity.png",
-                    Price = 2.64m,
+                    Price = new List<decimal>
+                    {
+                        2.64m
+                    },
                     MeasureId = 1
                 },
                 new Service
                 {
-                    Name = "Вода",
+                    Name = "Опалення",
+                    PictureUrl = "/images/services/heating.png",
+                    Price = new List<decimal>
+                    {
+                        1314.08m
+                    },
+                    MeasureId = 3
+                },
+                new Service
+                {
+                    Name = "Водопостачання",
                     PictureUrl = "/images/services/water.png",
-                    Price = 12.948m,
+                    Price = new List<decimal>
+                    {
+                        5.02m,
+                        12.95m
+                    },
+                    MeasureId = 2
+                },
+                new Service
+                {
+                    Name = "Водовідведення",
+                    PictureUrl = "/images/services/water.png",
+                    Price = new List<decimal>
+                    {
+                        3.89m,
+                        15.29m
+                    },
                     MeasureId = 2
                 },
                 new Service
                 {
                     Name = "Газ",
                     PictureUrl = "/images/services/gas.png",
-                    Price = 7.98m,
+                    Price = new List<decimal>
+                    {
+                        7.96m
+                    },
                     MeasureId = 2
                 },
                 new Service
                 {
                     Name = "Доставка газу",
                     PictureUrl = "/images/services/gas.png",
-                    Price = 1.68m,
+                    Price = new List<decimal>
+                    {
+                        1.68m
+                    },
                     MeasureId = 2
-                },
-                new Service
-                {
-                    Name = "Опалення",
-                    PictureUrl = "/images/services/heating.png",
-                    Price = 1684.32m,
-                    MeasureId = 3
                 }
             );
 

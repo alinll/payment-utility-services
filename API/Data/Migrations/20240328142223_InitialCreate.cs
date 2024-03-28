@@ -44,7 +44,7 @@ namespace API.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     PictureUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Price = table.Column<string>(type: "TEXT", nullable: true),
                     MeasureId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

@@ -80,7 +80,7 @@ namespace API.Data.Migrations
                     b.Property<string>("PictureUrl")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Price")
+                    b.Property<string>("Price")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
