@@ -6,5 +6,7 @@ namespace API.Models
         public string Name { get; set; }
         public string PictureUrl { get; set; }
         public decimal Price { get; set; }
+        public int MeasureId { get; set; }
+        public Measure Measure { get; set; }
     }
 }

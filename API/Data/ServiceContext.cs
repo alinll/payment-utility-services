@@ -9,6 +9,7 @@ namespace API.Data
         {
         }
 
+        public DbSet<Measure> Measures { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Basket> Baskets { get; set; }
     }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(ServiceContext))]
-    [Migration("20240311170844_InitialCreate")]
+    [Migration("20240328135733_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -54,10 +54,27 @@ namespace API.Data.Migrations
                     b.ToTable("BasketItems");
                 });
 
+            modelBuilder.Entity("API.Models.Measure", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Measures");
+                });
+
             modelBuilder.Entity("API.Models.Service", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MeasureId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -70,6 +87,8 @@ namespace API.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MeasureId");
 
                     b.ToTable("Services");
                 });
@@ -93,9 +112,25 @@ namespace API.Data.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("API.Models.Service", b =>
+                {
+                    b.HasOne("API.Models.Measure", "Measure")
+                        .WithMany("Services")
+                        .HasForeignKey("MeasureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Measure");
+                });
+
             modelBuilder.Entity("API.Models.Basket", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("API.Models.Measure", b =>
+                {
+                    b.Navigation("Services");
                 });
 #pragma warning restore 612, 618
         }

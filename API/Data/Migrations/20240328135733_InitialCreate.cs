@@ -24,6 +24,19 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Measures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Measures", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Services",
                 columns: table => new
                 {
@@ -31,11 +44,18 @@ namespace API.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     PictureUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<decimal>(type: "TEXT", nullable: false)
+                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    MeasureId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Services", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Services_Measures_MeasureId",
+                        column: x => x.MeasureId,
+                        principalTable: "Measures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,6 +93,11 @@ namespace API.Data.Migrations
                 name: "IX_BasketItems_ServiceId",
                 table: "BasketItems",
                 column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_MeasureId",
+                table: "Services",
+                column: "MeasureId");
         }
 
         /// <inheritdoc />
@@ -86,6 +111,9 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Services");
+
+            migrationBuilder.DropTable(
+                name: "Measures");
         }
     }
 }
