@@ -8,5 +8,5 @@ export interface BasketItem {
   serviceId: number
   name: string
   pictureUrl: string
-  price: number
+  price: number[]
 }

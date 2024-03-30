@@ -28,7 +28,7 @@ export default function ServiceCard({service}: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button component={Link} to={`/catalog/${service.id}`} size="small">Переглянути</Button>
+        <Button component={Link} to={`/catalog/${service.id}`} size="small">Тариф</Button>
         <LoadingButton loading={status.includes('pendingAddItem' + service.id)} onClick={() => dispatch(addBasketItemAsync({serviceId: service.id}))} size="small">Оплатити</LoadingButton>
       </CardActions>
       </Box>

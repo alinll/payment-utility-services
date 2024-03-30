@@ -52,7 +52,8 @@ const requests = {
 
 const Catalog = {
   list: () => requests.get('services'),
-  details: (id: number) => requests.get(`services/${id}`)
+  details: (id: number) => requests.get(`services/${id}`),
+  getMeasure: (id: number) => requests.get(`services/measures?id=${id}`)
 }
 
 const Basket = {

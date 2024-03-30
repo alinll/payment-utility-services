@@ -38,6 +38,13 @@ export default function ServiceDetails() {
       </Grid>
       <Grid container spacing={2} justifyContent='center' alignItems='center'>
       <Grid item xs={4} sx={{mt: 2}}>
+          <Typography variant='h4'>
+            Тариф: {service.price}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} justifyContent='center' alignItems='center'>
+      <Grid item xs={4} sx={{mt: 2}}>
           <LoadingButton 
           disabled={!!item}
           loading={status.includes('pending')} 

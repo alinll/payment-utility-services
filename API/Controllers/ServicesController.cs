@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +24,21 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Service>> GetService(int id)
         {
-            var service = await _context.Services.FindAsync(id);
+            Service service = await _context.Services.Include(i => i.Measure).FirstOrDefaultAsync(i => i.Id == id);
 
             if (service == null) return NotFound();
 
-            return service;
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true
+            };
+
+            string serviceJson = JsonSerializer.Serialize(service, options);
+
+            Service serviceDeserialized = JsonSerializer.Deserialize<Service>(serviceJson, options);
+
+            return serviceDeserialized;
         }
     }
 }
