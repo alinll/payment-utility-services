@@ -1,9 +1,9 @@
 import { TableContainer, Paper, Table, TableBody, TableRow, TableCell } from "@mui/material";
-//import { useAppSelector } from "../../app/store/configureStore";
+import { useAppSelector } from "../../app/store/configureStore";
 
 export default function BasketSummary() {
-  //const { basket } = useAppSelector(state => state.basket);
-  const total = 0/*basket?.items.reduce((sum, item) => sum + item.price, 0).toFixed(2);*/
+  const { basket } = useAppSelector(state => state.basket);
+  const total = basket?.items.reduce((sum, item) => sum + item.price[0], 0).toFixed(2);
   return (
       <>
           <TableContainer component={Paper} variant={'outlined'}>
