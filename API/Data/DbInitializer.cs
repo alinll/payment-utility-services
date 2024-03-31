@@ -1,11 +1,48 @@
 using API.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(ServiceContext context)
+        public static async Task Initialize(ServiceContext context, UserManager<User> userManager)
         {
+            if (!userManager.Users.Any())
+            {
+                var user = new User
+                {
+                    UserName = "Roman",
+                    LastName = "Іваненко",
+                    FirstName = "Роман",
+                    MidName = "Романович",
+                    Email = "Roman@gmail.com"
+                };
+
+                await userManager.CreateAsync(user, "Pa$$w0rd");
+                await userManager.AddToRoleAsync(user, "Individual");
+
+                var legal = new User
+                {
+                    UserName = "VitalikCompany",
+                    Email = "VitalikCompany@gmail.com"
+                };
+
+                await userManager.CreateAsync(legal, "Pa$$w0rd");
+                await userManager.AddToRoleAsync(legal, "Legal");
+
+                var admin = new User
+                {
+                    UserName = "Andrii",
+                    LastName = "Яшан",
+                    FirstName = "Андрій",
+                    MidName = "Олегович",
+                    Email = "Andrii@gmail.com"
+                };
+
+                await userManager.CreateAsync(admin, "Pa$$w0rd");
+                await userManager.AddToRolesAsync(legal, new[] { "Individual", "Admin" } );
+            }
+
             if (context.Services.Any()) return;
 
             context.Measures.AddRange(
