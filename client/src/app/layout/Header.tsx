@@ -31,11 +31,13 @@ export default function Header() {
         </Typography>
         </Box>
         <Box display='flex' alignItems='center'>
-        <IconButton component={Link} to='/basket' size='large' edge='start' color='inherit' sx={{mr: 2}}>
-          <Badge badgeContent={basket?.items.length} color='secondary'>
-            <ShoppingCart />
-          </Badge>
-        </IconButton>
+          {user && (
+          <IconButton component={Link} to='/basket' size='large' edge='start' color='inherit' sx={{mr: 2}}>
+            <Badge badgeContent={basket?.items.length} color='secondary'>
+              <ShoppingCart />
+            </Badge>
+          </IconButton>
+        )}
         {user ? (
           <SignedInMenu />
         ) : (

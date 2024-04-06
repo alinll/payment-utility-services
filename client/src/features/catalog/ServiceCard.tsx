@@ -12,6 +12,7 @@ interface Props {
 export default function ServiceCard({service}: Props) {
   const { status } = useAppSelector(state => state.basket);
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.account);
 
   return(
     <Card sx={{ display: 'flex' }}>
@@ -29,7 +30,14 @@ export default function ServiceCard({service}: Props) {
       </CardContent>
       <CardActions>
         <Button component={Link} to={`/catalog/${service.id}`} size="small">Тариф</Button>
-        <LoadingButton loading={status.includes('pendingAddItem' + service.id)} onClick={() => dispatch(addBasketItemAsync({serviceId: service.id}))} size="small">Оплатити</LoadingButton>
+        {user && (
+        <LoadingButton 
+          loading={status.includes('pendingAddItem' + service.id)} 
+          onClick={() => dispatch(addBasketItemAsync({serviceId: service.id}))} 
+          size="small">
+            Оплатити
+          </LoadingButton>
+        )}
       </CardActions>
       </Box>
     </Card>

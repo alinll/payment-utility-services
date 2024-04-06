@@ -15,6 +15,7 @@ export default function ServiceDetails() {
   const service = useAppSelector(state => servicesSelectors.selectById(state, parseInt(id!)));
   const { status: serviceStatus } = useAppSelector(state => state.catalog);
   const item = basket?.items.find(i => i.serviceId === service?.id);
+  const { user } = useAppSelector(state => state.account);
 
   useEffect(() => {
     if (!service && id) dispatch(fetchServiceAsync(parseInt(id)));
@@ -43,7 +44,7 @@ export default function ServiceDetails() {
           </Typography>
         </Grid>
       </Grid>
-      <Grid container spacing={2} justifyContent='center' alignItems='center'>
+      {user && (<Grid container spacing={2} justifyContent='center' alignItems='center'>
       <Grid item xs={4} sx={{mt: 2}}>
           <LoadingButton 
           disabled={!!item}
@@ -57,7 +58,7 @@ export default function ServiceDetails() {
             Оплатити
           </LoadingButton>
         </Grid>
-      </Grid>
+      </Grid>)}
     </Grid>
   )
 }

@@ -1,5 +1,5 @@
 import { Typography, Container, Box, Avatar, TextField, Grid, Paper } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { FieldValues, useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
@@ -8,14 +8,19 @@ import { signInUser } from "./accountSlice";
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const { register, handleSubmit, formState: { isSubmitting, errors, isValid } } = useForm({
     mode: 'onTouched'
   });
 
   async function submitForm(data: FieldValues) {
-    await dispatch(signInUser(data));
-    navigate('/');
+    try {
+      await dispatch(signInUser(data));
+      navigate(location.state?.from || '/');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (

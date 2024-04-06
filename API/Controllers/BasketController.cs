@@ -1,5 +1,6 @@
 using API.Data;
 using API.DTOs;
+using API.Extensions;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,16 +18,16 @@ namespace API.Controllers
         [HttpGet(Name = "GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
-            Basket basket = await RetrieveBasket();
+            Basket basket = await RetrieveBasket(GetUserId());
 
             if (basket == null) return NotFound();
-            return MapBasketToDto(basket);
+            return basket.MapBasketToDto();
         }
 
         [HttpPost]
         public async Task<ActionResult<BasketDto>> AddItemToBasket(int serviceId)
         {
-            var basket = await RetrieveBasket();
+            var basket = await RetrieveBasket(GetUserId());
 
             if (basket == null) basket = CreateBasket();
 
@@ -38,7 +39,7 @@ namespace API.Controllers
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) return CreatedAtRoute("GetBasket", MapBasketToDto(basket));
+            if (result) return CreatedAtRoute("GetBasket", basket.MapBasketToDto());
 
             return BadRequest(new ProblemDetails{ Title = "Problem saving item to basket" });
         }
@@ -46,7 +47,7 @@ namespace API.Controllers
         [HttpDelete]
         public async Task<ActionResult> RemoveBasketItem(int serviceId)
         {
-            var basket = await RetrieveBasket();
+            var basket = await RetrieveBasket(GetUserId());
 
             if (basket == null) return NotFound();
 
@@ -59,38 +60,39 @@ namespace API.Controllers
             return BadRequest(new ProblemDetails{ Title = "Problem removing item from the basket" });
         }
 
-        private async Task<Basket> RetrieveBasket()
+        private async Task<Basket> RetrieveBasket(string userId)
         {
+            if (string.IsNullOrEmpty(userId))
+            {
+                Response.Cookies.Delete("userId");
+                return null;
+            }
+
             return await _context.Baskets
                         .Include(i => i.Items)
                         .ThenInclude(s => s.Service)
-                        .FirstOrDefaultAsync(x => x.UserId == Request.Cookies["userId"]);
+                        .FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
+        private string GetUserId()
+        {
+            return User.Identity?.Name ?? Request.Cookies["userId"];
         }
 
         private Basket CreateBasket()
         {
-            var userId = Guid.NewGuid().ToString();
-            var cookieOptions = new CookieOptions{ IsEssential = true, Expires = DateTime.Now.AddDays(30) };
-            Response.Cookies.Append("userId", userId, cookieOptions);
+            var userId = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = Guid.NewGuid().ToString();
+                var cookieOptions = new CookieOptions{ IsEssential = true, Expires = DateTime.Now.AddDays(30) };
+                Response.Cookies.Append("userId", userId, cookieOptions);
+            }
+
             var basket = new Basket{ UserId = userId };
             _context.Baskets.Add(basket);
             return basket;
-        }
-
-        private BasketDto MapBasketToDto(Basket basket)
-        {
-            return new BasketDto
-            {
-                Id = basket.Id,
-                UserId = basket.UserId,
-                Items = basket.Items.Select(item => new BasketItemDto
-                {
-                    ServiceId = item.ServiceId,
-                    Name = item.Service.Name,
-                    PictureUrl = item.Service.PictureUrl,
-                    Price = new List<decimal>(item.Service.Price)
-                }).ToList()
-            };
         }
     }
 }
