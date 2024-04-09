@@ -1,96 +1,116 @@
+using System.Security.Claims;
 using API.Data;
 using API.DTOs;
-using API.Extensions;
 using API.Models;
-using API.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
     public class AccountController : BaseApiController
     {
-        private readonly UserManager<User> _userManager;
-        private readonly TokenService _tokenService;
         private readonly ServiceContext _context;
-        public AccountController(UserManager<User> userManager, TokenService tokenService, ServiceContext context)
+        public AccountController(ServiceContext context)
         {
             _context = context;
-            _tokenService = tokenService;
-            _userManager = userManager;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto) 
+        public async Task<ActionResult<User>> Login(LoginDto loginDto) 
         {
-            var user = await _userManager.FindByNameAsync(loginDto.UserName);
+            var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password)) return Unauthorized();
-
-            var userBasket = await RetrieveBasket(User.Identity.Name);
-
-            return new UserDto
+            if(!ModelState.IsValid || user == null)
             {
-                Email = user.Email,
-                Token = await _tokenService.GenerateToken(user),
-                Basket = userBasket?.MapBasketToDto()
+                return Unauthorized();
+            }
+
+            var userBasket = RetrieveBasket(loginDto.Email);
+            await Authenticate(user);
+
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true
             };
+
+            string userJson = JsonSerializer.Serialize(user, options);
+
+            User userDeserialized = JsonSerializer.Deserialize<User>(userJson, options);
+
+            return userDeserialized;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterDto registerDto)
         {
-            var user = new User
+            if (ModelState.IsValid)
             {
-                UserName = registerDto.UserName,
-                Email = registerDto.Email,
-                LastName = registerDto.LastName,
-                FirstName = registerDto.FirstName,
-                MidName = registerDto.MidName
-            };
-
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
-
-            if (!result.Succeeded)
-            {
-                foreach (var error in result.Errors)
+                User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerDto.Email);
+                
+                if (user == null)
                 {
-                    ModelState.AddModelError(error.Code, error.Description);
+                    user = new User
+                    {
+                        UserName = registerDto.UserName,
+                        Email = registerDto.Email,
+                        LastName = registerDto.LastName,
+                        FirstName = registerDto.FirstName,
+                        MidName = registerDto.MidName,
+                        Password = registerDto.Password,
+                        RoleId = 1
+                    };
+                    
+                    Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Individual");
+                    
+                    if (userRole != null)
+                    {
+                        user.Role = userRole;
+                    }
                 }
 
-                return ValidationProblem();
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
             }
-
-            await _userManager.AddToRoleAsync(user, "Individual");
+            else
+            {
+                ModelState.AddModelError("", "Неправильний логін і (або) пароль");
+            }
 
             return StatusCode(201);
         }
 
         [Authorize]
         [HttpGet("currentUser")]
-        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        public async Task<ActionResult<User>> GetCurrentUser() 
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
             var userBasket = await RetrieveBasket(User.Identity.Name);
 
-            return new UserDto
+            return user;
+        }
+
+        private async Task Authenticate(User user)
+        {
+            var claims = new List<Claim>
             {
-                Email = user.Email,
-                Token = await _tokenService.GenerateToken(user),
-                Basket = userBasket?.MapBasketToDto()
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
             };
+
+            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, 
+            ClaimsIdentity.DefaultRoleClaimType);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 
         private async Task<Basket> RetrieveBasket(string userId)
         {
-            if (string.IsNullOrEmpty(userId))
-            {
-                Response.Cookies.Delete("userId");
-                return null;
-            }
-
             return await _context.Baskets
                         .Include(i => i.Items)
                         .ThenInclude(s => s.Service)

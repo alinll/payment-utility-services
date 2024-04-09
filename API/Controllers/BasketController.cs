@@ -76,20 +76,12 @@ namespace API.Controllers
 
         private string GetUserId()
         {
-            return User.Identity?.Name ?? Request.Cookies["userId"];
+            return User.Identity?.Name;
         }
 
         private Basket CreateBasket()
         {
             var userId = User.Identity?.Name;
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                userId = Guid.NewGuid().ToString();
-                var cookieOptions = new CookieOptions{ IsEssential = true, Expires = DateTime.Now.AddDays(30) };
-                Response.Cookies.Append("userId", userId, cookieOptions);
-            }
-
             var basket = new Basket{ UserId = userId };
             _context.Baskets.Add(basket);
             return basket;

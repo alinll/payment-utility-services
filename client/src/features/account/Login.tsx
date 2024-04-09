@@ -36,11 +36,11 @@ export default function Login() {
         margin="normal"
         required
         fullWidth
-        label="Username"
+        label="Email"
         autoFocus
-        {...register('username', {required: 'Введіть username'})}
-        error={!!errors.username}
-        helperText={errors?.username?.message as string}
+        {...register('email', {required: 'Введіть email'})}
+        error={!!errors.email}
+        helperText={errors?.email?.message as string}
         />
         <TextField
         margin="normal"
