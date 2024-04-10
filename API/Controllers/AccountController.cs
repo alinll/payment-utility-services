@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
+using API.Extensions;
 
 namespace API.Controllers
 {
@@ -21,7 +20,7 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login(LoginDto loginDto) 
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto) 
         {
             var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
@@ -30,20 +29,14 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var userBasket = RetrieveBasket(loginDto.Email);
+            var userBasket = await RetrieveBasket(loginDto.Email);
             await Authenticate(user);
 
-            JsonSerializerOptions options = new()
+            return new UserDto
             {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                WriteIndented = true
+                Email = user.Email,
+                Basket = userBasket.MapBasketToDto()
             };
-
-            string userJson = JsonSerializer.Serialize(user, options);
-
-            User userDeserialized = JsonSerializer.Deserialize<User>(userJson, options);
-
-            return userDeserialized;
         }
 
         [HttpPost("register")]
@@ -93,6 +86,13 @@ namespace API.Controllers
             var userBasket = await RetrieveBasket(User.Identity.Name);
 
             return user;
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return StatusCode(201);
         }
 
         private async Task Authenticate(User user)

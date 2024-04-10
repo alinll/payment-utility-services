@@ -19,8 +19,9 @@ namespace API.Controllers
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
             Basket basket = await RetrieveBasket(GetUserId());
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == GetUserId());
 
-            if (basket == null) return NotFound();
+            if (basket == null || user == null) return NotFound();
             return basket.MapBasketToDto();
         }
 

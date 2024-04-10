@@ -16,7 +16,6 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {element: <RequireAuth />, children: [
-        { path: 'basket', element: <BasketPage /> },
         { path: 'checkout', element: <CheckoutPage /> }
       ]},
       { path: '', element: <Catalog /> },
@@ -25,6 +24,7 @@ export const router = createBrowserRouter([
       { path: 'not-found', element: <NotFound /> },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
+      { path: 'basket', element: <BasketPage /> },
       { path: '*', element: <Navigate replace to='/not-found' /> }
     ]
   }

@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { Basket } from "../../models/basket";
 import agent from "../../app/api/agent";
-import { getCookie } from "../../app/util/util";
 
 interface BasketState {
   basket: Basket | null;
@@ -20,11 +19,6 @@ export const fetchBasketAsync = createAsyncThunk<Basket>(
       return await agent.Basket.get();
     } catch (error: any) {
       return thunkAPI.rejectWithValue({error: error.data})
-    }
-  },
-  {
-    condition: () => {
-      if (!getCookie('userId')) return false;
     }
   }
 )

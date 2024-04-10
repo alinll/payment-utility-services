@@ -60,7 +60,7 @@ export const accountSlice = createSlice({
   reducers: {
     signOut: (state) => {
       state.user = null;
-      localStorage.removeItem('user');
+      agent.Account.logout();
       router.navigate('/');
     },
     setUser: (state, action) => {
