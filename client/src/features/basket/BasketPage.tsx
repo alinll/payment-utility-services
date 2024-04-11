@@ -9,6 +9,7 @@ import { removeBasketItemAsync } from "./basketSlice";
 export default function BasketPage() {
   const { basket, status } = useAppSelector(state => state.basket);
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.account);
 
   if (!basket) return <Typography variant='h3'>Ваш кошик порожній</Typography>
 
@@ -35,7 +36,7 @@ export default function BasketPage() {
                   <span>{item.name}</span>
                 </Box>
               </TableCell>
-              <TableCell align="right">{item.price}</TableCell>
+              <TableCell align="right">{user?.roleId != 1 ? (item.priceLegal) : (item.priceIndividual)}</TableCell>
               <TableCell align="right">
                 <LoadingButton 
                 loading={status === 'pendingRemoveItem' + item.serviceId + 'del'} 

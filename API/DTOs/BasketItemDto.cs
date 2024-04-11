@@ -5,6 +5,7 @@ namespace API.DTOs
         public int ServiceId { get; set; }
         public string Name { get; set; }
         public string PictureUrl { get; set; }
-        public List<decimal> Price { get; set; }
+        public decimal PriceIndividual { get; set; }
+        public decimal PriceLegal { get; set; }
     }
 }

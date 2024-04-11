@@ -16,7 +16,8 @@ namespace API.Extensions
                     ServiceId = item.ServiceId,
                     Name = item.Service.Name,
                     PictureUrl = item.Service.PictureUrl,
-                    Price = new List<decimal>(item.Service.Price)
+                    PriceIndividual = item.Service.PriceIndividual,
+                    PriceLegal = item.Service.PriceLegal
                 }).ToList()
             };
         }

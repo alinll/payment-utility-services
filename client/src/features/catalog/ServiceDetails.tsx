@@ -9,7 +9,7 @@ import { addBasketItemAsync } from "../basket/basketSlice";
 import { fetchServiceAsync, servicesSelectors } from "./catalogSlice";
 
 export default function ServiceDetails() {
-  const { basket, status } = useAppSelector(state => state.basket);
+  const { basket } = useAppSelector(state => state.basket);
   const dispatch = useAppDispatch();
   const { id } = useParams<{id: string}>();
   const service = useAppSelector(state => servicesSelectors.selectById(state, parseInt(id!)));
@@ -40,7 +40,7 @@ export default function ServiceDetails() {
       <Grid container spacing={2} justifyContent='center' alignItems='center'>
       <Grid item xs={4} sx={{mt: 2}}>
           <Typography variant='h4'>
-            Тариф: {service.price[0]}
+            Тариф: {user && user?.roleId != 1 ? (service.priceLegal) : (service.priceIndividual)}
           </Typography>
         </Grid>
       </Grid>
@@ -48,7 +48,6 @@ export default function ServiceDetails() {
       <Grid item xs={4} sx={{mt: 2}}>
           <LoadingButton 
           disabled={!!item}
-          loading={status.includes('pending')} 
           onClick={addToCart} 
           sx={{height: '55px'}} 
           color='primary' 

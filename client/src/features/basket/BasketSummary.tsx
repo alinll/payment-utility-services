@@ -3,7 +3,15 @@ import { useAppSelector } from "../../app/store/configureStore";
 
 export default function BasketSummary() {
   const { basket } = useAppSelector(state => state.basket);
-  const total = basket?.items.reduce((sum, item) => sum + item.price[0], 0).toFixed(2);
+  const { user } = useAppSelector(state => state.account);
+  let total;
+  if (user && user?.roleId != 1) {
+    total = basket?.items.reduce((sum, item) => sum + item.priceLegal, 0).toFixed(2);
+  }
+  else
+  {
+    total = basket?.items.reduce((sum, item) => sum + item.priceIndividual, 0).toFixed(2);
+  }
   return (
       <>
           <TableContainer component={Paper} variant={'outlined'}>

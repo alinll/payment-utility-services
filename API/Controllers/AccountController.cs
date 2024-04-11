@@ -35,7 +35,8 @@ namespace API.Controllers
             return new UserDto
             {
                 Email = user.Email,
-                Basket = userBasket.MapBasketToDto()
+                Basket = userBasket?.MapBasketToDto(),
+                RoleId = user.RoleId
             };
         }
 
@@ -65,6 +66,10 @@ namespace API.Controllers
                     {
                         user.Role = userRole;
                     }
+                }
+                else
+                {
+                    return Unauthorized();
                 }
 
                 _context.Users.Add(user);

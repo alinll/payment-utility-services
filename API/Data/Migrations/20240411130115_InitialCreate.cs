@@ -57,7 +57,8 @@ namespace API.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     PictureUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<string>(type: "TEXT", nullable: true),
+                    PriceIndividual = table.Column<decimal>(type: "TEXT", nullable: false),
+                    PriceLegal = table.Column<decimal>(type: "TEXT", nullable: false),
                     MeasureId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

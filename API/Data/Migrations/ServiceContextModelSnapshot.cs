@@ -94,7 +94,10 @@ namespace API.Data.Migrations
                     b.Property<string>("PictureUrl")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Price")
+                    b.Property<decimal>("PriceIndividual")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PriceLegal")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

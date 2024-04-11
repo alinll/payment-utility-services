@@ -2,7 +2,8 @@ export interface Service {
   id: number
   name: string
   pictureUrl: string
-  price: number[]
+  priceIndividual: number
+  priceLegal: number
   measureId: number
   measure: Measure
 }

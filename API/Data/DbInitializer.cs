@@ -79,62 +79,48 @@ namespace API.Data
                 {
                     Name = "Електроенергія",
                     PictureUrl = "/images/services/electricity.png",
-                    Price = new List<decimal>
-                    {
-                        2.64m
-                    },
+                    PriceIndividual = 3.96m,
+                    PriceLegal = 2.64m,
                     MeasureId = 1
                 },
                 new Service
                 {
                     Name = "Опалення",
                     PictureUrl = "/images/services/heating.png",
-                    Price = new List<decimal>
-                    {
-                        1314.08m
-                    },
+                    PriceIndividual = 1314.08m,
+                    PriceLegal = 1014.08m,
                     MeasureId = 3
                 },
                 new Service
                 {
                     Name = "Водопостачання",
                     PictureUrl = "/images/services/water.png",
-                    Price = new List<decimal>
-                    {
-                        5.02m,
-                        12.95m
-                    },
+                    PriceIndividual = 12.95m,
+                    PriceLegal = 5.02m,
                     MeasureId = 2
                 },
                 new Service
                 {
                     Name = "Водовідведення",
                     PictureUrl = "/images/services/water.png",
-                    Price = new List<decimal>
-                    {
-                        3.89m,
-                        15.29m
-                    },
+                    PriceIndividual = 15.29m,
+                    PriceLegal = 3.89m,
                     MeasureId = 2
                 },
                 new Service
                 {
                     Name = "Газ",
                     PictureUrl = "/images/services/gas.png",
-                    Price = new List<decimal>
-                    {
-                        7.96m
-                    },
+                    PriceIndividual = 7.98m,
+                    PriceLegal = 7.96m,
                     MeasureId = 2
                 },
                 new Service
                 {
                     Name = "Доставка газу",
                     PictureUrl = "/images/services/gas.png",
-                    Price = new List<decimal>
-                    {
-                        1.68m
-                    },
+                    PriceIndividual = 2.112m,
+                    PriceLegal = 1.68m,
                     MeasureId = 2
                 }
             );
