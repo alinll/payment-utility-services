@@ -7,5 +7,6 @@ namespace API.DTOs
         public string PictureUrl { get; set; }
         public decimal PriceIndividual { get; set; }
         public decimal PriceLegal { get; set; }
+        public bool HasCounter { get; set; }
     }
 }

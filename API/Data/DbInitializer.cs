@@ -69,6 +69,7 @@ namespace API.Data
                     PictureUrl = "/images/services/electricity.png",
                     PriceIndividual = 3.96m,
                     PriceLegal = 2.64m,
+                    HasCounter = true,
                     MeasureId = 1
                 },
                 new Service
@@ -77,6 +78,7 @@ namespace API.Data
                     PictureUrl = "/images/services/heating.png",
                     PriceIndividual = 1314.08m,
                     PriceLegal = 1014.08m,
+                    HasCounter = false,
                     MeasureId = 3
                 },
                 new Service
@@ -85,6 +87,7 @@ namespace API.Data
                     PictureUrl = "/images/services/water.png",
                     PriceIndividual = 12.95m,
                     PriceLegal = 5.02m,
+                    HasCounter = true,
                     MeasureId = 2
                 },
                 new Service
@@ -93,6 +96,7 @@ namespace API.Data
                     PictureUrl = "/images/services/water.png",
                     PriceIndividual = 15.29m,
                     PriceLegal = 3.89m,
+                    HasCounter = true,
                     MeasureId = 2
                 },
                 new Service
@@ -101,6 +105,7 @@ namespace API.Data
                     PictureUrl = "/images/services/gas.png",
                     PriceIndividual = 7.98m,
                     PriceLegal = 7.96m,
+                    HasCounter = true,
                     MeasureId = 2
                 },
                 new Service
@@ -109,6 +114,7 @@ namespace API.Data
                     PictureUrl = "/images/services/gas.png",
                     PriceIndividual = 2.112m,
                     PriceLegal = 1.68m,
+                    HasCounter = false,
                     MeasureId = 2
                 }
             );

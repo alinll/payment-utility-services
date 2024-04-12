@@ -7,6 +7,7 @@ namespace API.Models
         public string PictureUrl { get; set; }
         public decimal PriceIndividual { get; set; }
         public decimal PriceLegal { get; set; }
+        public bool HasCounter { get; set; }
         public int MeasureId { get; set; }
         public Measure Measure { get; set; }
     }

@@ -130,6 +130,7 @@ namespace API.Data.Migrations
                     PictureUrl = table.Column<string>(type: "TEXT", nullable: true),
                     PriceIndividual = table.Column<decimal>(type: "TEXT", nullable: false),
                     PriceLegal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    HasCounter = table.Column<bool>(type: "INTEGER", nullable: false),
                     MeasureId = table.Column<int>(type: "INTEGER", nullable: false),
                     PersonalAccountId = table.Column<int>(type: "INTEGER", nullable: true)
                 },

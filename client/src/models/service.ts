@@ -4,6 +4,7 @@ export interface Service {
   pictureUrl: string
   priceIndividual: number
   priceLegal: number
+  hasCounter: boolean
   measureId: number
   measure: Measure
 }

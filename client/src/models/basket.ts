@@ -10,4 +10,5 @@ export interface BasketItem {
   pictureUrl: string
   priceIndividual: number
   priceLegal: number
+  hasCounter: boolean
 }

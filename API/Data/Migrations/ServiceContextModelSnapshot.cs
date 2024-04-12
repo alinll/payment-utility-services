@@ -145,6 +145,9 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("HasCounter")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("MeasureId")
                         .HasColumnType("INTEGER");
 

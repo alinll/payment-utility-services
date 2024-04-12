@@ -17,7 +17,8 @@ namespace API.Extensions
                     Name = item.Service.Name,
                     PictureUrl = item.Service.PictureUrl,
                     PriceIndividual = item.Service.PriceIndividual,
-                    PriceLegal = item.Service.PriceLegal
+                    PriceLegal = item.Service.PriceLegal,
+                    HasCounter = item.Service.HasCounter
                 }).ToList()
             };
         }
