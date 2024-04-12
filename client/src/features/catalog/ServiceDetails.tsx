@@ -33,15 +33,19 @@ export default function ServiceDetails() {
   if (!service) return <NotFound />
 
   return(
-    <Grid container spacing={6} justifyContent='center' alignItems='center'>
+    <Grid container justifyContent='center' alignItems='center'>
       <Grid item>
         <Typography variant='h3'>{service.name}</Typography>
+        <Typography variant='h3'>Тариф:</Typography>
       </Grid>
       <Grid container spacing={2} justifyContent='center' alignItems='center'>
-      <Grid item xs={4} sx={{mt: 2}}>
-          <Typography variant='h4'>
-            Тариф: {user && user?.roleId != 1 ? (service.priceLegal) : (service.priceIndividual)}
-          </Typography>
+      <Grid item sx={{mt: 2}}>
+        <Typography variant='h4'>
+          Для фізичних осіб: {service.priceIndividual}
+        </Typography>
+        <Typography variant='h4'>
+          Для юридичних осіб: {service.priceLegal}
+        </Typography>
         </Grid>
       </Grid>
       {user && (<Grid container spacing={2} justifyContent='center' alignItems='center'>

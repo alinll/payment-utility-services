@@ -57,10 +57,10 @@ namespace API.Controllers
                         FirstName = registerDto.FirstName,
                         MidName = registerDto.MidName,
                         Password = registerDto.Password,
-                        RoleId = 1
+                        RoleId = 2
                     };
                     
-                    Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Individual");
+                    Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Buyer");
                     
                     if (userRole != null)
                     {

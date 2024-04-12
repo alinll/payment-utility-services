@@ -12,17 +12,12 @@ namespace API.Data
                     new Role
                     {
                         Id = 1,
-                        Name = "Individual"
+                        Name = "Admin"
                     },
                     new Role
                     {
                         Id = 2,
-                        Name = "Legal"
-                    },
-                    new Role
-                    {
-                        Id = 3,
-                        Name = "Admin"
+                        Name = "Buyer"
                     }
                 );
 
@@ -35,13 +30,6 @@ namespace API.Data
                         MidName = "Романович",
                         Email = "Roman@gmail.com",
                         Password = "Pa$$w0rd",
-                        RoleId = 1
-                    },
-                    new User
-                    {
-                        UserName = "VitalikCompany",
-                        Email = "VitalikCompany@gmail.com",
-                        Password = "Pa$$w0rd",
                         RoleId = 2
                     },
                     new User
@@ -52,7 +40,7 @@ namespace API.Data
                         MidName = "Олегович",
                         Email = "Andrii@gmail.com",
                         Password = "Pa$$w0rd",
-                        RoleId = 3
+                        RoleId = 1
                     }
                 );
 
