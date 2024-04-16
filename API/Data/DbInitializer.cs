@@ -177,7 +177,7 @@ namespace API.Data
                     {
                         Id = 4,
                         AddressId = 2,
-                        ServiceId = 1
+                        ServiceId = 2
                     },
                     new PersonalAccount
                     {

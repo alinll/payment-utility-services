@@ -94,6 +94,11 @@ namespace API.Controllers
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
             var userBasket = await RetrieveBasket(User.Identity.Name);
+            var personalAccounts = await _context.PersonalAccounts
+            .Include(a => a.Address)
+            .Include(s => s.Service)
+            .Where(u => u.Address.UserId == User.Identity.Name)
+            .ToListAsync();
 
             return user;
         }

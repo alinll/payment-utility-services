@@ -3,7 +3,7 @@ import { useAppSelector } from "../../app/store/configureStore";
 
 export default function BasketSummary() {
   const { basket } = useAppSelector(state => state.basket);
-  const total = basket?.items.reduce((sum, item) => sum + item.priceIndividual, 0).toFixed(2);
+  const total = basket?.items.reduce((sum, item) => sum + item.price, 0).toFixed(2);
 
   return (
       <>
