@@ -6,11 +6,11 @@ namespace API.Models
         public string UserId { get; set; }
         public List<BasketItem> Items { get; set; } = new();
         
-        public void AddItem(Service service)
+        public void AddItem(Service service, PersonalAccount personalAccount)
         {
             if (Items.All(item => item.ServiceId != service.Id))
             {
-                Items.Add(new BasketItem { Service = service });
+                Items.Add(new BasketItem { Service = service, PersonalAccount = personalAccount });
             }
 
             return;

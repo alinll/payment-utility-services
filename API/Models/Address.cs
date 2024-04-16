@@ -11,6 +11,9 @@ namespace API.Models
         public int PartHouse { get; set; }
         public int ApartmentNumber { get; set; }
         public Type Type { get; set; }
+        
+        public string UserId { get; set; }
+        public User User { get; set; }
         public ICollection<PersonalAccount> PersonalAccounts { get; set; }
     }
 }

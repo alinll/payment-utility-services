@@ -50,6 +50,30 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    PictureUrl = table.Column<string>(type: "TEXT", nullable: true),
+                    PriceIndividual = table.Column<decimal>(type: "TEXT", nullable: false),
+                    PriceLegal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    HasCounter = table.Column<bool>(type: "INTEGER", nullable: false),
+                    MeasureId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Services_Measures_MeasureId",
+                        column: x => x.MeasureId,
+                        principalTable: "Measures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -87,14 +111,15 @@ namespace API.Data.Migrations
                     PartHouse = table.Column<int>(type: "INTEGER", nullable: false),
                     ApartmentNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId1 = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Addresses_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Addresses_Users_UserId1",
+                        column: x => x.UserId1,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
@@ -105,9 +130,12 @@ namespace API.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    PreviousCounterValue = table.Column<int>(type: "INTEGER", nullable: false),
-                    CurrentCounterValue = table.Column<int>(type: "INTEGER", nullable: false),
-                    AddressId = table.Column<int>(type: "INTEGER", nullable: false)
+                    PreviousCounterValue = table.Column<int>(type: "INTEGER", nullable: true),
+                    CurrentCounterValue = table.Column<int>(type: "INTEGER", nullable: true),
+                    Difference = table.Column<int>(type: "INTEGER", nullable: true),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: true),
+                    AddressId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ServiceId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,36 +146,12 @@ namespace API.Data.Migrations
                         principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Services",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    PictureUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    PriceIndividual = table.Column<decimal>(type: "TEXT", nullable: false),
-                    PriceLegal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    HasCounter = table.Column<bool>(type: "INTEGER", nullable: false),
-                    MeasureId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PersonalAccountId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Services", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Services_Measures_MeasureId",
-                        column: x => x.MeasureId,
-                        principalTable: "Measures",
+                        name: "FK_PersonalAccounts_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Services_PersonalAccounts_PersonalAccountId",
-                        column: x => x.PersonalAccountId,
-                        principalTable: "PersonalAccounts",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -157,7 +161,8 @@ namespace API.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ServiceId = table.Column<int>(type: "INTEGER", nullable: false),
-                    BasketId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BasketId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PersonalAccountId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -169,6 +174,12 @@ namespace API.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_BasketItems_PersonalAccounts_PersonalAccountId",
+                        column: x => x.PersonalAccountId,
+                        principalTable: "PersonalAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_BasketItems_Services_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "Services",
@@ -177,14 +188,19 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Addresses_UserId",
+                name: "IX_Addresses_UserId1",
                 table: "Addresses",
-                column: "UserId");
+                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BasketItems_BasketId",
                 table: "BasketItems",
                 column: "BasketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BasketItems_PersonalAccountId",
+                table: "BasketItems",
+                column: "PersonalAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BasketItems_ServiceId",
@@ -197,14 +213,14 @@ namespace API.Data.Migrations
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PersonalAccounts_ServiceId",
+                table: "PersonalAccounts",
+                column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Services_MeasureId",
                 table: "Services",
                 column: "MeasureId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Services_PersonalAccountId",
-                table: "Services",
-                column: "PersonalAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
@@ -222,19 +238,19 @@ namespace API.Data.Migrations
                 name: "Baskets");
 
             migrationBuilder.DropTable(
-                name: "Services");
-
-            migrationBuilder.DropTable(
-                name: "Measures");
-
-            migrationBuilder.DropTable(
                 name: "PersonalAccounts");
 
             migrationBuilder.DropTable(
                 name: "Addresses");
 
             migrationBuilder.DropTable(
+                name: "Services");
+
+            migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Measures");
 
             migrationBuilder.DropTable(
                 name: "Roles");

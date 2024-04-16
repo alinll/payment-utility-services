@@ -35,7 +35,7 @@ export default function BasketPage() {
                   <span>{item.name}</span>
                 </Box>
               </TableCell>
-              <TableCell align="right">{item.priceIndividual}</TableCell>
+              <TableCell align="right">{item.price}</TableCell>
               <TableCell align="right">
                 <LoadingButton 
                 loading={status === 'pendingRemoveItem' + item.serviceId + 'del'} 

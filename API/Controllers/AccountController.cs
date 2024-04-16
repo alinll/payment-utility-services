@@ -23,6 +23,11 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto) 
         {
             var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+            var personalAccounts = await _context.PersonalAccounts
+            .Include(a => a.Address)
+            .Include(s => s.Service)
+            .Where(u => u.Address.UserId == User.Identity.Name)
+            .ToListAsync();
 
             if(!ModelState.IsValid || user == null)
             {
@@ -35,7 +40,7 @@ namespace API.Controllers
             return new UserDto
             {
                 Email = user.Email,
-                Basket = userBasket?.MapBasketToDto(),
+                Basket = userBasket?.MapBasketToDto(personalAccounts),
                 RoleId = user.RoleId
             };
         }

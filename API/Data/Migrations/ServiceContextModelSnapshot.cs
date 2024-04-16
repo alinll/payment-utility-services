@@ -44,12 +44,15 @@ namespace API.Data.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("UserId")
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UserId1")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Addresses");
                 });
@@ -77,12 +80,17 @@ namespace API.Data.Migrations
                     b.Property<int>("BasketId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("PersonalAccountId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ServiceId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BasketId");
+
+                    b.HasIndex("PersonalAccountId");
 
                     b.HasIndex("ServiceId");
 
@@ -112,15 +120,26 @@ namespace API.Data.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CurrentCounterValue")
+                    b.Property<int?>("CurrentCounterValue")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PreviousCounterValue")
+                    b.Property<int?>("Difference")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PreviousCounterValue")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ServiceId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
+
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("PersonalAccounts");
                 });
@@ -154,9 +173,6 @@ namespace API.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("PersonalAccountId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("PictureUrl")
                         .HasColumnType("TEXT");
 
@@ -169,8 +185,6 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MeasureId");
-
-                    b.HasIndex("PersonalAccountId");
 
                     b.ToTable("Services");
                 });
@@ -211,9 +225,11 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Models.Address", b =>
                 {
-                    b.HasOne("API.Models.User", null)
+                    b.HasOne("API.Models.User", "User")
                         .WithMany("Address")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("API.Models.BasketItem", b =>
@@ -224,6 +240,12 @@ namespace API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("API.Models.PersonalAccount", "PersonalAccount")
+                        .WithMany()
+                        .HasForeignKey("PersonalAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("API.Models.Service", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId")
@@ -231,6 +253,8 @@ namespace API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Basket");
+
+                    b.Navigation("PersonalAccount");
 
                     b.Navigation("Service");
                 });
@@ -243,7 +267,15 @@ namespace API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("API.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Address");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("API.Models.Service", b =>
@@ -253,10 +285,6 @@ namespace API.Data.Migrations
                         .HasForeignKey("MeasureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("API.Models.PersonalAccount", null)
-                        .WithMany("Services")
-                        .HasForeignKey("PersonalAccountId");
 
                     b.Navigation("Measure");
                 });
@@ -283,11 +311,6 @@ namespace API.Data.Migrations
                 });
 
             modelBuilder.Entity("API.Models.Measure", b =>
-                {
-                    b.Navigation("Services");
-                });
-
-            modelBuilder.Entity("API.Models.PersonalAccount", b =>
                 {
                     b.Navigation("Services");
                 });
