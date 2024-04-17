@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { addBasketItemAsync } from "../basket/basketSlice";
+import { fetchServiceAsync } from "./catalogSlice";
 
 interface Props {
   service: Service;
@@ -29,7 +30,7 @@ export default function ServiceCard({service}: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button component={Link} to={`/catalog/${service.id}`} size="small">Тариф</Button>
+        <Button component={Link} to={`/catalog/${service.id}`} size="small" onClick={() => {dispatch(fetchServiceAsync(service.id))}}>Тариф</Button>
         {user && (
         <LoadingButton 
           loading={status.includes('pendingAddItem' + service.id)} 

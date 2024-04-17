@@ -41,10 +41,10 @@ export default function ServiceDetails() {
       <Grid container spacing={2} justifyContent='center' alignItems='center'>
       <Grid item sx={{mt: 2}}>
         <Typography variant='h4'>
-          Для фізичних осіб: {service.priceIndividual}
+          Для фізичних осіб: {service.priceIndividual} грн/{service.measure.name}
         </Typography>
         <Typography variant='h4'>
-          Для юридичних осіб: {service.priceLegal}
+          Для юридичних осіб: {service.priceLegal} грн/{service.measure.name}
         </Typography>
         </Grid>
       </Grid>
