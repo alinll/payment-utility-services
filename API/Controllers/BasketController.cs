@@ -39,13 +39,15 @@ namespace API.Controllers
 
             var service = await _context.Services.FindAsync(serviceId);
 
-            if (service == null) return BadRequest(new ProblemDetails{ Title = "Service Not Found" });
+            if (service == null) return BadRequest(new ProblemDetails{ Title = "Сервіс не знайдено" });
 
             var personalAccount = await _context.PersonalAccounts
             .Include(a => a.Address)
             .Include(s => s.Service)
             .Where(u => u.Address.UserId == GetUserId())
             .FirstOrDefaultAsync(s => s.ServiceId == serviceId);
+
+            if (personalAccount == null) return BadRequest(new ProblemDetails{ Title = "У вас немає особового рахунку для даного сервісу" });
 
             if (service.HasCounter == true)
             {
@@ -86,7 +88,7 @@ namespace API.Controllers
 
             if (result) return CreatedAtRoute("GetBasket", basket.MapBasketToDto(personalAccounts));
 
-            return BadRequest(new ProblemDetails{ Title = "Problem saving item to basket" });
+            return BadRequest(new ProblemDetails{ Title = "Не вдалося зберегти товар у кошик" });
         }
 
         [HttpDelete]
@@ -102,7 +104,7 @@ namespace API.Controllers
 
             if (result) return Ok();
 
-            return BadRequest(new ProblemDetails{ Title = "Problem removing item from the basket" });
+            return BadRequest(new ProblemDetails{ Title = "Проблема з видаленням товару з кошика" });
         }
 
         private async Task<Basket> RetrieveBasket(string userId)
