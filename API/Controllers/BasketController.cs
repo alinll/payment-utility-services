@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using API.Data;
 using API.DTOs;
 using API.Extensions;
@@ -31,12 +33,54 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BasketDto>> AddItemToBasket(int serviceId, int? previousCounter, int? currentCounter)
+        public async Task<ActionResult<BasketDto>> AddItemToBasket(int serviceId)
         {
             var basket = await RetrieveBasket(GetUserId());
 
             if (basket == null) basket = CreateBasket();
 
+            var service = await _context.Services.FindAsync(serviceId);
+
+            if (service == null) return BadRequest(new ProblemDetails{ Title = "Сервіс не знайдено" });
+
+            var personalAccount = await _context.PersonalAccounts
+            .Include(a => a.Address)
+            .Include(s => s.Service)
+            .Where(u => u.Address.UserId == GetUserId())
+            .FirstOrDefaultAsync(s => s.ServiceId == serviceId);
+
+            if (personalAccount == null) return BadRequest(new ProblemDetails{ Title = "У вас немає особового рахунку для даного сервісу" });
+
+            if (service.HasCounter == false)
+            {
+                if (personalAccount.Address.Type == Models.Type.House)
+                {
+                    personalAccount.Price = service.PriceIndividual;
+                }
+                else
+                {
+                    personalAccount.Price = service.PriceLegal;
+                }
+            }
+
+            var personalAccounts = await _context.PersonalAccounts
+            .Include(a => a.Address)
+            .Include(s => s.Service)
+            .Where(u => u.Address.UserId == GetUserId() && u.ServiceId == serviceId)
+            .ToListAsync();
+
+            basket.AddItem(service, personalAccount);
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (result) return CreatedAtRoute("GetBasket", basket.MapBasketToDto(personalAccounts));
+
+            return BadRequest(new ProblemDetails{ Title = "Не вдалося додати товар у кошик" });
+        }
+
+        [HttpPost("{serviceId}")]
+        public async Task<ActionResult<PersonalAccount>> GiveCounters(int serviceId, int previousCounter, int currentCounter)
+        {
             var service = await _context.Services.FindAsync(serviceId);
 
             if (service == null) return BadRequest(new ProblemDetails{ Title = "Сервіс не знайдено" });
@@ -66,29 +110,24 @@ namespace API.Controllers
             }
             else
             {
-                if (personalAccount.Address.Type == Models.Type.House)
-                {
-                    personalAccount.Price = service.PriceIndividual;
-                }
-                else
-                {
-                    personalAccount.Price = service.PriceLegal;
-                }
+                return BadRequest(new ProblemDetails{ Title = "Даний сервіс не потребує показників лічильників" });
             }
-
-            var personalAccounts = await _context.PersonalAccounts
-            .Include(a => a.Address)
-            .Include(s => s.Service)
-            .Where(u => u.Address.UserId == GetUserId() && u.ServiceId == serviceId)
-            .ToListAsync();
-
-            basket.AddItem(service, personalAccount);
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) return CreatedAtRoute("GetBasket", basket.MapBasketToDto(personalAccounts));
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true
+            };
 
-            return BadRequest(new ProblemDetails{ Title = "Не вдалося зберегти товар у кошик" });
+            string personalAccountJson = JsonSerializer.Serialize(personalAccount, options);
+
+            PersonalAccount personalAccountDeserialized = JsonSerializer.Deserialize<PersonalAccount>(personalAccountJson, options);
+
+            if (result) return personalAccountDeserialized;
+
+            return BadRequest(new ProblemDetails{ Title = "Не вдалося зберегти показники лічильників" });
         }
 
         [HttpDelete]
@@ -104,7 +143,7 @@ namespace API.Controllers
 
             if (result) return Ok();
 
-            return BadRequest(new ProblemDetails{ Title = "Проблема з видаленням товару з кошика" });
+            return BadRequest(new ProblemDetails{ Title = "Не вдалося видалити товар з кошика" });
         }
 
         private async Task<Basket> RetrieveBasket(string userId)
