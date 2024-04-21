@@ -81,6 +81,15 @@ namespace API.Controllers
         [HttpPost("{serviceId}")]
         public async Task<ActionResult<PersonalAccount>> GiveCounters(int serviceId, int previousCounter, int currentCounter)
         {
+            if (previousCounter < 0 || currentCounter < 0 )
+            {
+                return BadRequest(new ProblemDetails{ Title = "Показники лічильника не можуть бути від'ємними числами" });
+            }
+            else if (previousCounter > currentCounter)
+            {
+                return BadRequest(new ProblemDetails{ Title = "Поточний показник лічильника не може бути меншим за попередній" });
+            }
+
             var service = await _context.Services.FindAsync(serviceId);
 
             if (service == null) return BadRequest(new ProblemDetails{ Title = "Сервіс не знайдено" });
