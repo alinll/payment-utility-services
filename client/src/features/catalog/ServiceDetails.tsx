@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { LoadingButton } from "@mui/lab";
@@ -16,6 +16,7 @@ export default function ServiceDetails() {
   const { status: serviceStatus } = useAppSelector(state => state.catalog);
   const item = basket?.items.find(i => i.serviceId === service?.id);
   const { user } = useAppSelector(state => state.account);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!service && id) dispatch(fetchServiceAsync(parseInt(id)));
@@ -24,7 +25,11 @@ export default function ServiceDetails() {
   function addToCart() {
     if (!service) return;
     if (!item) {
-      dispatch(addBasketItemAsync({serviceId: service?.id}));
+      if (service.hasCounter) {
+        navigate(`/giveCounters/${service.id}`)
+      } else {
+        dispatch(addBasketItemAsync({serviceId: service?.id}));
+      }
     }
   }
 
@@ -58,7 +63,7 @@ export default function ServiceDetails() {
           size='large' 
           variant='contained' 
           fullWidth>
-            Оплатити
+            Додати у кошик
           </LoadingButton>
         </Grid>
       </Grid>)}

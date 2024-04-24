@@ -9,6 +9,7 @@ import CheckoutPage from "../../features/checkout/CheckoutPage";
 import Login from "../../features/account/Login";
 import Register from "../../features/account/Register";
 import RequireAuth from "./RequireAuth";
+import GiveCounters from "../../features/account/GiveCounters";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: 'basket', element: <BasketPage /> },
+      { path: 'giveCounters/:id', element: <GiveCounters /> },
       { path: '*', element: <Navigate replace to='/not-found' /> }
     ]
   }

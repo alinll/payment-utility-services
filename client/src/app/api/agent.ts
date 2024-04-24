@@ -65,7 +65,9 @@ const Account = {
   login: (values: any) => requests.post('account/login', values),
   register: (values: any) => requests.post('account/register', values),
   currentUser: () => requests.get("account/currentUser"),
-  logout: () => requests.post('account/logout', {})
+  logout: () => requests.post('account/logout', {}),
+  giveCounters: (serviceId: number, previousCounter: number, currentCounter: number) => 
+    requests.post(`account/${serviceId}?previousCounter=${previousCounter}&currentCounter=${currentCounter}`, {previousCounter, currentCounter})
 }
 
 const agent = {

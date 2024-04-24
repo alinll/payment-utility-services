@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { Service } from "../../models/service";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { addBasketItemAsync } from "../basket/basketSlice";
@@ -14,6 +14,7 @@ export default function ServiceCard({service}: Props) {
   const { status } = useAppSelector(state => state.basket);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.account);
+  const navigate = useNavigate();
 
   return(
     <Card sx={{ display: 'flex' }}>
@@ -30,13 +31,23 @@ export default function ServiceCard({service}: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button component={Link} to={`/catalog/${service.id}`} size="small" onClick={() => {dispatch(fetchServiceAsync(service.id))}}>Тариф</Button>
+        <Button 
+        component={Link} 
+        to={`/catalog/${service.id}`} 
+        size="small" 
+        onClick={() => {dispatch(fetchServiceAsync(service.id))}}>
+          Тариф
+        </Button>
         {user && (
         <LoadingButton 
           loading={status.includes('pendingAddItem' + service.id)} 
-          onClick={() => dispatch(addBasketItemAsync({serviceId: service.id}))} 
+          onClick={() => {service.hasCounter ? (
+            navigate(`/giveCounters/${service.id}`)
+          ) : (
+            dispatch(addBasketItemAsync({serviceId: service.id}))
+          )}} 
           size="small">
-            Оплатити
+            Додати у кошик
           </LoadingButton>
         )}
       </CardActions>
