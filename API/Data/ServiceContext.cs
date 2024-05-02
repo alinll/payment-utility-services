@@ -1,4 +1,5 @@
 using API.Models;
+using API.Models.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
@@ -16,6 +17,7 @@ namespace API.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Basket> Baskets { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

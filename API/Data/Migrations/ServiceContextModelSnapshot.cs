@@ -111,6 +111,53 @@ namespace API.Data.Migrations
                     b.ToTable("Measures");
                 });
 
+            modelBuilder.Entity("API.Models.OrderAggregate.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("Total")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("API.Models.OrderAggregate.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PersonalAccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("PersonalAccountId");
+
+                    b.ToTable("OrderItem");
+                });
+
             modelBuilder.Entity("API.Models.PersonalAccount", b =>
                 {
                     b.Property<int>("Id")
@@ -259,6 +306,42 @@ namespace API.Data.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("API.Models.OrderAggregate.OrderItem", b =>
+                {
+                    b.HasOne("API.Models.OrderAggregate.Order", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("API.Models.PersonalAccount", "PersonalAccount")
+                        .WithMany()
+                        .HasForeignKey("PersonalAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("API.Models.OrderAggregate.ServiceItemOrdered", "ItemOrdered", b1 =>
+                        {
+                            b1.Property<int>("OrderItemId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<int>("ServiceId")
+                                .HasColumnType("INTEGER");
+
+                            b1.HasKey("OrderItemId");
+
+                            b1.ToTable("OrderItem");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderItemId");
+                        });
+
+                    b.Navigation("ItemOrdered");
+
+                    b.Navigation("PersonalAccount");
+                });
+
             modelBuilder.Entity("API.Models.PersonalAccount", b =>
                 {
                     b.HasOne("API.Models.Address", "Address")
@@ -313,6 +396,11 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Models.Measure", b =>
                 {
                     b.Navigation("Services");
+                });
+
+            modelBuilder.Entity("API.Models.OrderAggregate.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("API.Models.Role", b =>
