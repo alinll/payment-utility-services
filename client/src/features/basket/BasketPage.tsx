@@ -19,6 +19,7 @@ export default function BasketPage() {
         <TableHead>
           <TableRow>
             <TableCell>Сервіс</TableCell>
+            <TableCell align="right">Особовий рахунок</TableCell>
             <TableCell align="right">Ціна</TableCell>
             <TableCell align="right"></TableCell>
           </TableRow>
@@ -35,6 +36,7 @@ export default function BasketPage() {
                   <span>{item.name}</span>
                 </Box>
               </TableCell>
+              <TableCell align="right">{item.personalAccountId}</TableCell>
               <TableCell align="right">{item.price}</TableCell>
               <TableCell align="right">
                 <LoadingButton 
