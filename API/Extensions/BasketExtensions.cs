@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using API.DTOs;
 using API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions
 {
@@ -38,6 +39,13 @@ namespace API.Extensions
             BasketDto basketDeserialized = JsonSerializer.Deserialize<BasketDto>(basketJson, options);
 
             return basketDeserialized;
+        }
+
+        public static IQueryable<Basket> RetrieveBasketWithItems(this IQueryable<Basket> basket, string userId)
+        {
+            return basket.Include(i => i.Items)
+            .ThenInclude(s => s.Service)
+            .Where(u => u.UserId == userId);
         }
     }
 }

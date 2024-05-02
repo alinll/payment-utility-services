@@ -45,7 +45,6 @@ namespace API.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<string>(type: "TEXT", nullable: true),
                     OrderDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Total = table.Column<decimal>(type: "TEXT", nullable: true),
                     OrderStatus = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

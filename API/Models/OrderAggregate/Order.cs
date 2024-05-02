@@ -6,7 +6,6 @@ namespace API.Models.OrderAggregate
         public string UserId { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public List<OrderItem> OrderItems { get; set; }
-        public decimal? Total { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
     }
 }
