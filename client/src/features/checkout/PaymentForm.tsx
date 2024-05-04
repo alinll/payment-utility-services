@@ -12,7 +12,6 @@ export default function PaymentForm() {
   const { register, handleSubmit, formState: { errors, isValid } } = useForm({
     mode: 'onTouched'
   });
-  const [, setOrderNumber] = useState(0);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -20,8 +19,7 @@ export default function PaymentForm() {
     setLoading(true);
 
     try {
-      const orderNumber = await agent.Orders.create();
-      setOrderNumber(orderNumber);
+      await agent.Orders.create();
       dispatch(clearBasket());
       setLoading(false);
 
