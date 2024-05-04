@@ -10,6 +10,5 @@ export default function SavedOrder() {
       Номер вашого платежу: 1. 
     </Typography>
     </>
-
   )
 }

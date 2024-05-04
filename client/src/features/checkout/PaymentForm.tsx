@@ -1,14 +1,28 @@
 import { Typography, Grid, TextField, FormControlLabel, Checkbox, Button, Box } from "@mui/material";
+import { FieldValues, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export default function PaymentForm() {
   const navigate = useNavigate();
+  const { register, handleSubmit, formState: { errors, isValid } } = useForm({
+    mode: 'onTouched'
+  });
+
+  async function submitForm(data: FieldValues) {
+    try {
+      await console.log(data);
+      navigate('/savedOrder');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <Typography variant="h6" gutterBottom>
         Оплата
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} component="form" onSubmit={handleSubmit(submitForm)} >
         <Grid item xs={12} md={6}>
           <TextField
             required
@@ -17,11 +31,13 @@ export default function PaymentForm() {
             fullWidth
             autoComplete="cc-name"
             variant="standard"
+            {...register('cardName', {required: 'Введіть ім`я власника карти'})}
+            error={!!errors.cardName}
+            helperText={errors?.cardName?.message as string}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            required
             id="cardNumber"
             label="Номер карти"
             fullWidth
@@ -31,17 +47,14 @@ export default function PaymentForm() {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            required
             id="expDate"
             label="Термін придатності"
             fullWidth
             autoComplete="cc-exp"
-            variant="standard"
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            required
             id="cvv"
             label="CVV"
             fullWidth
@@ -57,9 +70,8 @@ export default function PaymentForm() {
           <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
             <Button
             variant="contained"
-            onClick={() => {
-              navigate('/savedOrder')
-            }}
+            disabled={!isValid}
+            type='submit'
           >
             Оплатити
             </Button>
