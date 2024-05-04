@@ -6,9 +6,6 @@ export default function SavedOrder() {
     <Typography variant="h5" gutterBottom>
       Дякуємо за оплату!
     </Typography>
-    <Typography variant="subtitle1">
-      Номер вашого платежу: 1. 
-    </Typography>
     </>
   )
 }

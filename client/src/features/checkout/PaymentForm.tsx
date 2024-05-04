@@ -1,19 +1,36 @@
-import { Typography, Grid, TextField, FormControlLabel, Checkbox, Button, Box } from "@mui/material";
+import { Typography, Grid, TextField, FormControlLabel, Checkbox, Box } from "@mui/material";
+import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import agent from "../../app/api/agent";
+import { useAppDispatch } from "../../app/store/configureStore";
+import { clearBasket } from "../basket/basketSlice";
+import { LoadingButton } from "@mui/lab";
 
 export default function PaymentForm() {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors, isValid } } = useForm({
     mode: 'onTouched'
   });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [orderNumber, setOrderNumber] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   async function submitForm(data: FieldValues) {
+    setLoading(true);
+
     try {
+      const orderNumber = await agent.Orders.create();
+      setOrderNumber(orderNumber);
+      dispatch(clearBasket());
+      setLoading(false);
+
       await console.log(data);
       navigate('/savedOrder');
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   }
 
@@ -51,6 +68,7 @@ export default function PaymentForm() {
             label="Термін придатності"
             fullWidth
             autoComplete="cc-exp"
+            variant="standard"
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -68,13 +86,14 @@ export default function PaymentForm() {
             label="Зберегти дані карти"
           />
           <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button
+            <LoadingButton
+            loading={loading}
             variant="contained"
             disabled={!isValid}
             type='submit'
           >
             Оплатити
-            </Button>
+            </LoadingButton>
           </Box>
         </Grid>
       </Grid>

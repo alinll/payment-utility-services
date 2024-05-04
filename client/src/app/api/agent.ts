@@ -70,10 +70,17 @@ const Account = {
     requests.post(`account/${serviceId}?previousCounter=${previousCounter}&currentCounter=${currentCounter}`, {previousCounter, currentCounter})
 }
 
+const Orders = {
+  list: () => requests.get('orders'),
+  fetch: (id: number) => requests.get(`orders/${id}`),
+  create: () => requests.post('orders', {})
+}
+
 const agent = {
   Catalog,
   Basket,
-  Account
+  Account,
+  Orders
 }
 
 export default agent;
