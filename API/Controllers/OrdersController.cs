@@ -71,10 +71,13 @@ namespace API.Controllers
                 items.Add(orderItem);
             }
 
+            var total = items.Sum(item => item.Price);
+
             var order = new Order
             {
                 OrderItems = items,
-                UserId = User.Identity.Name
+                UserId = User.Identity.Name,
+                Total = total
             };
 
             _context.Orders.Add(order);

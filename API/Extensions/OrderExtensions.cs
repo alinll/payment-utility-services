@@ -14,6 +14,7 @@ namespace API.Extensions
                 UserId = order.UserId,
                 OrderDate = order.OrderDate,
                 OrderStatus = order.OrderStatus.ToString(),
+                Total = order.Total,
                 OrderItems = order.OrderItems.Select(item => new OrderItemDto
                 {
                     ServiceId = item.ItemOrdered.ServiceId,

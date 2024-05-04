@@ -3,6 +3,7 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../store/configureStore";
 import { clearBasket } from "../../features/basket/basketSlice";
 import { signOut } from "../../features/account/accountSlice";
+import { Link } from "react-router-dom";
 
 export default function SignedInMenu() {
   const dispatch = useAppDispatch();
@@ -31,7 +32,7 @@ export default function SignedInMenu() {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={handleClose}>Мої платежі</MenuItem>
+        <MenuItem component={Link} to='/orders'>Мої платежі</MenuItem>
         <MenuItem onClick={() => {
           dispatch(signOut());
           dispatch(clearBasket());

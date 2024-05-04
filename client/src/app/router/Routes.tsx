@@ -11,6 +11,7 @@ import RequireAuth from "./RequireAuth";
 import GiveCounters from "../../features/account/GiveCounters";
 import PaymentForm from "../../features/checkout/PaymentForm";
 import SavedOrder from "../../features/checkout/SavedOrder";
+import Orders from "../../features/orders/Orders";
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +20,8 @@ export const router = createBrowserRouter([
     children: [
       {element: <RequireAuth />, children: [
         { path: 'checkout', element: <PaymentForm /> },
-        { path: 'savedOrder', element: <SavedOrder /> }
+        { path: 'savedOrder', element: <SavedOrder /> },
+        { path: 'orders', element: <Orders /> }
       ]},
       { path: '', element: <Catalog /> },
       { path: 'catalog/:id', element: <ServiceDetails /> },
