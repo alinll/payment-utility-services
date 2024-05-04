@@ -12,8 +12,7 @@ export default function PaymentForm() {
   const { register, handleSubmit, formState: { errors, isValid } } = useForm({
     mode: 'onTouched'
   });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [orderNumber, setOrderNumber] = useState(0);
+  const [, setOrderNumber] = useState(0);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
